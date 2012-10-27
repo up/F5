@@ -1,4 +1,4 @@
-#F5
+#[ F5 ]
 
 ##### Bookmarklet Code:
 
