@@ -53,14 +53,14 @@
 
     setDimentions();
 
-    document.close();
-
     if (window.focus) {
       F5win.focus();
     }
 
     F5win.onresize = setDimentions;
     F5win.onunload = function () {};
+
+    document.close();
 
   } else {
 
