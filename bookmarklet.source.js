@@ -4,9 +4,7 @@
     timer = 1000,
     title = 'F5 :: ' + document.title,
     src = window.location.href,
-    F5win = window.open(),
-    F5WinHead = F5win.document.head,
-    F5WinBody = F5win.document.body,
+    F5win, F5WinHead, F5WinBody,
     iframe, script, getDimentions, setDimentions
   ;
 
@@ -38,6 +36,10 @@
   };
 
   if (document.getElementById('iframe1') === null) {
+
+    F5win = window.open(),
+    F5WinHead = F5win.document.head,
+    F5WinBody = F5win.document.body,
 
     F5WinHead.innerHTML = '<title>' + title + '</title><style>body{margin:0;overflow:hidden}</style>';
 
