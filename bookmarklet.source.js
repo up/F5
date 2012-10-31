@@ -52,14 +52,14 @@
 		      top: 70,
 		      right: 0
 		    },
-		    delay = 10,
-		    waitBeforeHiding = 1000, //sets the time the menu stays out for after the mouse goes off it.
+		    delay = 5,
+		    waitBeforeHiding = 500, //sets the time the menu stays out for after the mouse goes off it.
 		    bgcolor = "#222",
-		    contentWidth = 0, // Must be a multiple of 10! 
+		    contentWidth = 0, 
 		    labelWidth = 35,
 		    timer, SB, SBWrapper, SBLabel, SBContentWrapper, 
 		    label = '&nbsp;<b>F5</b>&nbsp;',
-		    title = '<div id="SBTitle" style="margin:0"><b>Configuration</b></div>',
+		    title = '<div id="SBTitle" style="margin:0"></div>',
 		    content = '<div id="SBContent"></div>',
 		    divstyle = 'display:inline-block;color:white;padding: 10px 5px;',
 		    body = document.querySelector('body'),
@@ -67,7 +67,7 @@
 		  ;
 
 		  function setBorderRadius(y, x) {
-		    var radius = '3px;';
+		    var radius = '5px;';
 		    return '-webkit-border-' + y + '-' + x + '-radius: ' + radius + 
 		           '-moz-border-radius-' + y + x + ': ' + radius + 
 		           'border-' + y + '-' + x + '-radius: ' + radius;
@@ -107,7 +107,7 @@
 
 		  function moveBack() {
 		    clearTimeout(timer);
-		    if (parseInt(SBWrapper.style.right, 10) > (-contentWidth)) {
+		    if (parseInt(SBWrapper.style.right, 10) > -contentWidth) {
 		      timer = setTimeout(function () {
 		        moveBack();
 		      }, delay);
@@ -120,7 +120,7 @@
 		  }
 
 		  function refreshLayout() {
-			  contentWidth = SBWrapper.offsetWidth;
+			  contentWidth = SBWrapper.offsetWidth + 15;
 			  contentWidth += (10 - (contentWidth %25 10)); // Convert % manual to %25 ##############################################
 			  SBWrapper.style.width = contentWidth + labelWidth + "px";
 			  SBWrapper.style.right = -contentWidth + "px";
@@ -138,7 +138,19 @@
 			  for(var i = 0; i<inputs.length;i+=1) {
 			    inputs[i].checked = checked;
 			    change(inputs[i], i);
+			
+				  // highlight
+				  if(inputs[i].checked) {
+					    inputs[i].nextSibling.style.color = "#cea500";
+					} else {
+					  if(/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())){
+					    inputs[i].nextSibling.style.color = "#DDD";
+					  } else {
+						  inputs[i].nextSibling.style.color = "#EEE";
+					  }
+					}
 			  }
+						
 			}
 
 			function change(obj, num) {
@@ -149,9 +161,13 @@
 				}
 			}
 
-			function addExternalFiles(files) {
+			function createSidebarContent(files) {
 				
-				var i = 0, span, input, label, br;
+				var i = 0, span, input, label, br, select, options, option;
+				
+				function addElement(tagname, parent){
+					parent.appendChild(document.createElement(tagname));
+				}
 
 				SBContent.innerHTML = '';
 			  //SBContent = document.querySelector('#SBContent');
@@ -172,62 +188,68 @@
 				  label = document.createElement('label');
 				  label.htmlFor = "file_" + i;
 				  label.style.cssText = "cursor:pointer; margin-right:12px";
+				  if(/\.css/.test(files[i][1].toLowerCase())){
+					  label.style.cssText+= "color:#DDD;";
+				  }
           label.innerHTML = files[i][1];
 
           span.appendChild(input);
           span.appendChild(label);
           SBContent.appendChild(span);
 
-				  if(files.length <= 10) {
-	          SBContent.appendChild(document.createElement('br'));
+				  if(files.length <= 10 && i < files.length - 1 ) {
+					  addElement('br', SBContent);
 				  }
 			  }
-						
-        SBContent.appendChild(document.createElement('br'));
+									
+			  var para = document.createElement('p');
+			  para.style.cssText = "text-align:right; margin: 10px 0";
+ 			  para.innerHTML = '<a href="https://github.com/up/F5" style="background-color: #666;display:inline-block;padding:2px 4px;color:#E8E8E8;text-decoration:none;font-size: 0.7em;">F5 @ github</a>';
+        SBContent.appendChild(para);
 
-        SBTitle.appendChild(document.createElement('br'));
 
-			  var select = document.createElement('select');
+
+			  select = document.createElement('select');
 			  select.id = "method";
 			  select.style.cssText = "";
 			
-			  var options = [
+			  options = [
 			    ["header", "response header"],
 			    ["length", "content length"],
 			    ["content", "content"]
 			  ];
 			
 			  for(i = 0; i<options.length;i+=1) { 
-				  var option = document.createElement('option');
+				  option = document.createElement('option');
 				  option.value = options[i][0];
-				  option.innerHTML = "check by " + options[i][1];
+				  option.innerHTML = "Check by " + options[i][1];
 	        select.appendChild(option);
         }
 
         SBTitle.appendChild(select);
 
 			  if(files.length <= 10) {
-          SBTitle.appendChild(document.createElement('br'));
+				  addElement('br', SBTitle);
 			  }
 
 			  select = document.createElement('select');
 			  select.id = "interval";
 			  select.style.cssText = "";
 			
-			  var options = [1000, 2000, 3000, 5000, 10000];
+			  options = [1000, 2000, 3000, 5000, 10000];
 			
 			  for(i = 0; i<options.length;i+=1) { 
-				  var option = document.createElement('option');
+				  option = document.createElement('option');
 				  option.value = options[i][0];
-				  option.innerHTML = "interval " + options[i];
+				  option.innerHTML = "Interval " + options[i];
 	        select.appendChild(option);
         }
 
         SBTitle.appendChild(select);
 
-			  SBTitle.innerHTML+= '<button onclick="F5.toggleAll()">TOGGLE</button>';
-        SBTitle.appendChild(document.createElement('br'));
-        SBTitle.appendChild(document.createElement('br'));
+			  SBTitle.innerHTML+= '<button onclick="F5.toggleAll()">Toggle</button>';
+			  addElement('br', SBTitle);
+			  addElement('br', SBTitle);
 
 			  refreshLayout();
 				
@@ -264,14 +286,14 @@
 		    divstyle + 
 		    setBorderRadius('bottom', 'left') + 
 		    setBoxShadow() +
-		    'padding-left:20px;' +
+		    'padding-top:17px;padding-left:20px;' +
 		    'background-color:#222;';
 		  SBContentWrapper.innerHTML = title + content;
 		  SBWrapper.appendChild(SBContentWrapper);
 		  
 		  body.style.overflowX = 'hidden';
 
-			addExternalFiles(files);
+			createSidebarContent(files);
 
 		  window['F5']['toggleAll'] = toggleAll;
 		  window['F5']['change'] = change;
@@ -422,7 +444,16 @@
 			  var inputs = SBContent.getElementsByTagName('input');
 			  for(i = 0; i<inputs.length;i+=1) {
 				  files[i][2] = inputs[i].checked;
-					//F5.change(this,i);
+				  // highlight
+				  if(inputs[i].checked) {
+					    inputs[i].nextSibling.style.color = "#cea500";
+					} else {
+					  if(/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())){
+					    inputs[i].nextSibling.style.color = "#DDD";
+					  } else {
+						  inputs[i].nextSibling.style.color = "#EEE";
+					  }
+					}
 			  }
 		  };
 		  var SBMethod = document.querySelector('#method');
@@ -452,7 +483,7 @@
     F5WinHead = F5win.document.head;
     F5WinBody = F5win.document.body;
 
-    F5WinHead.innerHTML = '<title>' + title + '</title><style>body{margin:0;overflow:hidden;} iframe{border:none}</style>';
+    F5WinHead.innerHTML = '<title>' + title + '</title><style>body{ margin:0; overflow:hidden;} iframe{border:none} select, button {margin-left:7px;margin-top:3px;font-size:0.8em;} button {margin-left:8px;} option {padding: 2px 3px 0px;}</style>';
 
     iframe = document.createElement('iframe');
     iframe.id = iframeId;
