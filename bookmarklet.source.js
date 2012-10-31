@@ -37,290 +37,285 @@
 
   function F5(win, iframeId, method, interval) {
     var
-      timer, len, checksum, compare, get, activate, deactivate, add, getScrollXY, _SB_,
-      checksums = [],
+      timer, len, checksum, compare, get, activate, deactivate, add, getScrollXY, _SB_, checksums = [],
       positions = [],
       count = 0,
       pending = false,
       running = false,
       files = []
-    ;
+   ;
 
-		_SB_ = function (files) {
-		  var
-		    position = {
-		      top: 70,
-		      right: 0
-		    },
-		    delay = 5,
-		    waitBeforeHiding = 500, //sets the time the menu stays out for after the mouse goes off it.
-		    bgcolor = "#222",
-		    contentWidth = 0, 
-		    labelWidth = 35,
-		    timer, SB, SBWrapper, SBLabel, SBContentWrapper, 
-		    label = '&nbsp;<b>F5</b>&nbsp;',
-		    title = '<div id="SBTitle" style="margin:0"></div>',
-		    content = '<div id="SBContent"></div>',
-		    divstyle = 'display:inline-block;color:white;padding: 10px 5px;',
-		    body = document.querySelector('body'),
-		    checked = false
-		  ;
+    _SB_ = function (files) {
+      var
+        position = {
+	        top: 70,
+	        right: 0
+	      },
+	      delay = 5,
+	      waitBeforeHiding = 500,
+	      //sets the time the menu stays out for after the mouse goes off it.
+	      bgcolor = "#222",
+        contentWidth = 0,
+        labelWidth = 35,
+        timer, SB, SBWrapper, SBLabel, SBContentWrapper, label = '&nbsp;<b>F5</b>&nbsp;',
+        title = '<div id="SBTitle" style="margin:0"></div>',
+        content = '<div id="SBContent"></div>',
+        divstyle = 'display:inline-block;color:white;padding: 10px 5px;',
+        body = document.querySelector('body'),
+        checked = false
+      ;
 
-		  function setBorderRadius(y, x) {
-		    var radius = '5px;';
-		    return '-webkit-border-' + y + '-' + x + '-radius: ' + radius + 
-		           '-moz-border-radius-' + y + x + ': ' + radius + 
-		           'border-' + y + '-' + x + '-radius: ' + radius;
-		  }
+      function setBorderRadius(y, x) {
+        var radius = '5px;';
+        return '-webkit-border-' + y + '-' + x + '-radius: ' + radius + '-moz-border-radius-' + y + x + ': ' + radius + 'border-' + y + '-' + x + '-radius: ' + radius;
+      }
 
-		  function setBoxShadow() {
-		    var boxshadow = '-2px 2px 10px #222;';
-		    return '-webkit-box-shadow: ' + boxshadow +
-		           '-moz-box-shadow: ' + boxshadow +
-		           'box-shadow: ' + boxshadow;
-		  }
+      function setBoxShadow() {
+        var boxshadow = '-2px 2px 10px #222;';
+        return '-webkit-box-shadow: ' + boxshadow + '-moz-box-shadow: ' + boxshadow + 'box-shadow: ' + boxshadow;
+      }
 
-		  function newDiv(id) {
-		    var div = document.createElement('div');
-		    if (id !== null) {
-		      div.id = id;
-		    }
-		    return div;
-		  }
+      function newDiv(id) {
+        var div = document.createElement('div');
+        if (id !== null) {
+          div.id = id;
+        }
+        return div;
+      }
 
-		  function show() {
-		    clearTimeout(timer);
-		    if (parseInt(SBWrapper.style.right, 10) < 0) {
-		      timer = setTimeout(function () {
-		        show();
-		      }, delay);
-		      slide(10);
-		    }
-		  };
+      function show() {
+        clearTimeout(timer);
+        if (parseInt(SBWrapper.style.right, 10) < 0) {
+          timer = setTimeout(function () {
+            show();
+          }, delay);
+          slide(10);
+        }
+      };
 
-		  function hide() {
-		    clearTimeout(timer);
-		    timer = setTimeout(function () {
-		      moveBack();
-		    }, waitBeforeHiding);
-		  }
+      function hide() {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          moveBack();
+        }, waitBeforeHiding);
+      }
 
-		  function moveBack() {
-		    clearTimeout(timer);
-		    if (parseInt(SBWrapper.style.right, 10) > -contentWidth) {
-		      timer = setTimeout(function () {
-		        moveBack();
-		      }, delay);
-		      slide(-10);
-		    }
-		  }
+      function moveBack() {
+        clearTimeout(timer);
+        if (parseInt(SBWrapper.style.right, 10) > - contentWidth) {
+          timer = setTimeout(function () {
+            moveBack();
+          }, delay);
+          slide(-10);
+        }
+      }
 
-		  function slide(num) {
-		    SBWrapper.style.right = parseInt(SBWrapper.style.right, 10) + num + "px";
-		  }
+      function slide(num) {
+        SBWrapper.style.right = parseInt(SBWrapper.style.right, 10) + num + "px";
+      }
 
-		  function refreshLayout() {
-			  contentWidth = SBWrapper.offsetWidth + 15;
-			  contentWidth += (10 - (contentWidth %25 10)); // Convert % manual to %25 ##############################################
-			  SBWrapper.style.width = contentWidth + labelWidth + "px";
-			  SBWrapper.style.right = -contentWidth + "px";
-			  SBContentWrapper.style.width = contentWidth - labelWidth + 7 + "px";
-			  SBWrapper.style.visibility = "visible";
-		  }
+      function refreshLayout() {
+        contentWidth = SBWrapper.offsetWidth + 15;
+        contentWidth += (10 - (contentWidth % 25 10)); // Convert % manual to %25 ##############################################
+        SBWrapper.style.width = contentWidth + labelWidth + "px";
+        SBWrapper.style.right = -contentWidth + "px";
+        SBContentWrapper.style.width = contentWidth - labelWidth + 7 + "px";
+        SBWrapper.style.visibility = "visible";
+      }
 
-			function toggleAll() {
+      function toggleAll() {
 
-			  SBContent = document.querySelector('#SBContent');
-			  var inputs = SBContent.getElementsByTagName('input');
+        SBContent = document.querySelector('#SBContent');
+        var inputs = SBContent.getElementsByTagName('input');
 
-			  checked = checked ? false : true;
+        checked = checked ? false : true;
 
-			  for(var i = 0; i<inputs.length;i+=1) {
-			    inputs[i].checked = checked;
-			    change(inputs[i], i);
-			
-				  // highlight
-				  if(inputs[i].checked) {
-					    inputs[i].nextSibling.style.color = "#cea500";
-					} else {
-					  if(/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())){
-					    inputs[i].nextSibling.style.color = "#DDD";
-					  } else {
-						  inputs[i].nextSibling.style.color = "#EEE";
-					  }
-					}
-			  }
-						
-			}
+        for (var i = 0; i < inputs.length; i += 1) {
+          inputs[i].checked = checked;
+          change(inputs[i], i);
 
-			function change(obj, num) {
-				if(!obj.checked) {
-				  files[num][2] = false;
-				} else {
-				  files[num][2] = true;
-				}
-			}
+          // highlight
+          if (inputs[i].checked) {
+            inputs[i].nextSibling.style.color = "#cea500";
+          } else {
+            if (/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())) {
+              inputs[i].nextSibling.style.color = "#DDD";
+            } else {
+              inputs[i].nextSibling.style.color = "#EEE";
+            }
+          }
+        }
 
-			function createSidebarContent(files) {
-				
-				var i = 0, span, input, label, br, select, options, option;
-				
-				function addElement(tagname, parent){
-					parent.appendChild(document.createElement(tagname));
-				}
+      }
 
-				SBContent.innerHTML = '';
-			  //SBContent = document.querySelector('#SBContent');
-			  SBTitle = document.querySelector('#SBTitle');
+      function change(obj, num) {
+        if (!obj.checked) {
+          files[num][2] = false;
+        } else {
+          files[num][2] = true;
+        }
+      }
 
-			  if(files.length > 10) {
-				  SBContent.style.width = '500px';		
-			  }
-			  for(; i<files.length;i+=1) { 
-				  span = document.createElement('span');
-				  span.style.cssText = "display:inline-block;white-space:nowrap;";
-				
-				  input = document.createElement('input');
-				  input.id = "file_" + i;
-				  input.type = "checkbox";
-				  input.value = files[i][1];
+      function createSidebarContent(files) {
 
-				  label = document.createElement('label');
-				  label.htmlFor = "file_" + i;
-				  label.style.cssText = "cursor:pointer; margin-right:12px";
-				  if(/\.css/.test(files[i][1].toLowerCase())){
-					  label.style.cssText+= "color:#DDD;";
-				  }
+        var 
+          i = 0,
+          span, input, label, br, select, options, option
+        ;
+
+        function addElement(tagname, parent) {
+          parent.appendChild(document.createElement(tagname));
+        }
+
+        SBContent.innerHTML = '';
+        //SBContent = document.querySelector('#SBContent');
+        SBTitle = document.querySelector('#SBTitle');
+
+        if (files.length > 10) {
+          SBContent.style.width = '500px';
+        }
+        for (; i < files.length; i += 1) {
+          span = document.createElement('span');
+          span.style.cssText = "display:inline-block;white-space:nowrap;";
+
+          input = document.createElement('input');
+          input.id = "file_" + i;
+          input.type = "checkbox";
+          input.value = files[i][1];
+
+          label = document.createElement('label');
+          label.htmlFor = "file_" + i;
+          label.style.cssText = "cursor:pointer; margin-right:12px";
+          if (/\.css/.test(files[i][1].toLowerCase())) {
+            label.style.cssText += "color:#DDD;";
+          }
           label.innerHTML = files[i][1];
 
           span.appendChild(input);
           span.appendChild(label);
           SBContent.appendChild(span);
 
-				  if(files.length <= 10 && i < files.length - 1 ) {
-					  addElement('br', SBContent);
-				  }
-			  }
-									
-			  var para = document.createElement('p');
-			  para.style.cssText = "text-align:right; margin: 10px 0";
- 			  para.innerHTML = '<a href="https://github.com/up/F5" style="background-color: #666;display:inline-block;padding:2px 4px;color:#E8E8E8;text-decoration:none;font-size: 0.7em;">F5 @ github</a>';
+          if (files.length <= 10 && i < files.length - 1) {
+            addElement('br', SBContent);
+          }
+        }
+
+        var para = document.createElement('p');
+        para.style.cssText = "text-align:right; margin: 10px 0";
+        para.innerHTML = '<a href="https://github.com/up/F5" style="background-color: #666;display:inline-block;padding:2px 4px;color:#E8E8E8;text-decoration:none;font-size: 0.7em;">F5 @ github</a>';
         SBContent.appendChild(para);
 
+        select = document.createElement('select');
+        select.id = "method";
+        select.style.cssText = "";
 
+        options = [
+          ["header", "response header"],
+          ["length", "content length"],
+          ["content", "content"]
+        ];
 
-			  select = document.createElement('select');
-			  select.id = "method";
-			  select.style.cssText = "";
-			
-			  options = [
-			    ["header", "response header"],
-			    ["length", "content length"],
-			    ["content", "content"]
-			  ];
-			
-			  for(i = 0; i<options.length;i+=1) { 
-				  option = document.createElement('option');
-				  option.value = options[i][0];
-				  option.innerHTML = "Check by " + options[i][1];
-	        select.appendChild(option);
+        for (i = 0; i < options.length; i += 1) {
+          option = document.createElement('option');
+          option.value = options[i][0];
+          option.innerHTML = "Check by " + options[i][1];
+          select.appendChild(option);
         }
 
         SBTitle.appendChild(select);
 
-			  if(files.length <= 10) {
-				  addElement('br', SBTitle);
-			  }
+        if (files.length <= 10) {
+          addElement('br', SBTitle);
+        }
 
-			  select = document.createElement('select');
-			  select.id = "interval";
-			  select.style.cssText = "";
-			
-			  options = [1000, 2000, 3000, 5000, 10000];
-			
-			  for(i = 0; i<options.length;i+=1) { 
-				  option = document.createElement('option');
-				  option.value = options[i][0];
-				  option.innerHTML = "Interval " + options[i];
-	        select.appendChild(option);
+        select = document.createElement('select');
+        select.id = "interval";
+        select.style.cssText = "";
+
+        options = [1000, 2000, 3000, 5000, 10000];
+
+        for (i = 0; i < options.length; i += 1) {
+          option = document.createElement('option');
+          option.value = options[i][0];
+          option.innerHTML = "Interval " + options[i];
+          select.appendChild(option);
         }
 
         SBTitle.appendChild(select);
 
-			  SBTitle.innerHTML+= '<button onclick="F5.toggleAll()">Toggle</button>';
-			  addElement('br', SBTitle);
-			  addElement('br', SBTitle);
+        SBTitle.innerHTML += '<button onclick="F5.toggleAll()">Toggle</button>';
+        addElement('br', SBTitle);
+        addElement('br', SBTitle);
 
-			  refreshLayout();
-				
-			}
+        refreshLayout();
 
-		  SB = newDiv(null);
-		  SB.style.cssText = '' + 
-		    'font-family:arial;' + 
-		    'position:absolute;right:' + position.right + 'px;top:' + position.top + 'px;' + 
-		    'z-index: 1000;';
-		  body.appendChild(SB);
+      }
 
-		  SBWrapper = newDiv('SBWrapper');
-		  SBWrapper.onmouseover = show;
-		  SBWrapper.onmouseout = hide;
-		  SBWrapper.style.cssText = '' + 
-		    'position:absolute;right:0;top:0;' +
-		    'visibility:hidden;';
-		  SB.appendChild(SBWrapper);
+      SB = newDiv(null);
+      SB.style.cssText = '' + 
+        'font-family:arial;' + 
+        'position:absolute;right:' + position.right + 'px;top:' + position.top + 'px;' + 
+        'z-index: 1000;';
+      body.appendChild(SB);
 
-		  SBLabel = newDiv(null);
-		  SBLabel.style.cssText = '' + 
-		    divstyle + 
-		    setBorderRadius('top', 'left') + 
-		    setBorderRadius('bottom', 'left') + 
-		    setBoxShadow() +
-		    'vertical-align:top;' +
-		    'background-color:#222;';
-		  SBLabel.innerHTML = label;
-		  SBWrapper.appendChild(SBLabel);
+      SBWrapper = newDiv('SBWrapper');
+      SBWrapper.onmouseover = show;
+      SBWrapper.onmouseout = hide;
+      SBWrapper.style.cssText = '' + 
+        'position:absolute;right:0;top:0;' + 
+        'visibility:hidden;';
+      SB.appendChild(SBWrapper);
 
-		  SBContentWrapper = newDiv(null);
-		  SBContentWrapper.style.cssText = '' + 
-		    divstyle + 
-		    setBorderRadius('bottom', 'left') + 
-		    setBoxShadow() +
-		    'padding-top:17px;padding-left:20px;' +
-		    'background-color:#222;';
-		  SBContentWrapper.innerHTML = title + content;
-		  SBWrapper.appendChild(SBContentWrapper);
-		  
-		  body.style.overflowX = 'hidden';
+      SBLabel = newDiv(null);
+      SBLabel.style.cssText = '' + 
+        divstyle + 
+        setBorderRadius('top', 'left') + 
+        setBorderRadius('bottom', 'left') + 
+        setBoxShadow() + 
+        'vertical-align:top;' + 
+        'background-color:#222;';
+      SBLabel.innerHTML = label;
+      SBWrapper.appendChild(SBLabel);
 
-			createSidebarContent(files);
+      SBContentWrapper = newDiv(null);
+      SBContentWrapper.style.cssText = '' + 
+        divstyle + 
+        setBorderRadius('bottom', 'left') + 
+        setBoxShadow() + 
+        'padding-top:17px;padding-left:20px;' + 
+        'background-color:#222;';
+      SBContentWrapper.innerHTML = title + content;
+      SBWrapper.appendChild(SBContentWrapper);
 
-		  window['F5']['toggleAll'] = toggleAll;
-		  window['F5']['change'] = change;
+      body.style.overflowX = 'hidden';
 
-		};
+      createSidebarContent(files);
+
+      window['F5']['toggleAll'] = toggleAll;
+      window['F5']['change'] = change;
+
+    };
 
     compare = function () {
 
-	    //console.log(count + '-' + files.length);
-	    //console.log(count + '-' + files[count]);
+      //console.log(count + '-' + files.length);
+      //console.log(count + '-' + files[count]);
+      if (files[count][2] && arguments[0]) {
+        var iframe, positions;
+        pending = true;
 
-      if(files[count][2] && arguments[0]) {
-		    var iframe, positions;
-	      pending = true;
+        if (checksums[count] === undefined) {
+          checksums[count] = checksum;
+        } else if (checksums[count] !== checksum) {
+          checksums[count] = checksum;
+          iframe = document.getElementById(iframeId);
+          positions = getScrollXY();
+          iframe.contentWindow.location.reload(true);
+          iframe.onload = function () {
+            iframe.contentWindow.scrollTo(positions[0], positions[1]);
+          };
+        }
 
-	      if (checksums[count] === undefined) {
-	        checksums[count] = checksum;
-	      } else if (checksums[count] !== checksum) {
-	        checksums[count] = checksum;
-	        iframe = document.getElementById(iframeId);
-	        positions = getScrollXY();
-	        iframe.contentWindow.location.reload(true);
-	        iframe.onload = function () {
-	          iframe.contentWindow.scrollTo(positions[0], positions[1]);
-	        };
-	      }
-	
       }
 
       count++;
@@ -361,45 +356,45 @@
     };
 
     get = function () {
-	    if(files[count][2]) {
-	      var req = new XMLHttpRequest();
-	      req.onreadystatechange = function () {
-	        if (req.readyState === 4) {
-	          switch (method) {
-	          case "header":
-	            if (req.status === 200) {
-	              checksum = req.getResponseHeader("Last-Modified").toString();
-	              compare(true);
-	            }
-	            break;
-	          case "length":
-	            checksum = req.responseText.toString().length;
-	            compare(true);
-	            break;
-	          case "content":
-	            checksum = req.responseText.toString();
-	            compare(true);
-	            break;
-	          }
-	        }
-	      };
-	      req.open("GET", files[count][0] + "?" + new Date().getTime(), true);
-	      req.send(null);
+      if (files[count][2]) {
+        var req = new XMLHttpRequest();
+        req.onreadystatechange = function () {
+          if (req.readyState === 4) {
+            switch (method) {
+            case "header":
+              if (req.status === 200) {
+                checksum = req.getResponseHeader("Last-Modified").toString();
+                compare(true);
+              }
+              break;
+            case "length":
+              checksum = req.responseText.toString().length;
+              compare(true);
+              break;
+            case "content":
+              checksum = req.responseText.toString();
+              compare(true);
+              break;
+            }
+          }
+        };
+        req.open("GET", files[count][0] + "?" + new Date().getTime(), true);
+        req.send(null);
       } else {
-	      compare(false);
+        compare(false);
       }
     };
 
     activate = function () {
       files = getfiles();
-	    _SB_(files);
+      _SB_(files);
       len = files.length;
       timer = win.setInterval(function () {
         if (!pending) {
           get();
         }
       }, interval);
-      running = true;      
+      running = true;
     };
 
     deactivate = function () {
@@ -409,10 +404,10 @@
 
     add = function (file) {
       files.push([
-	      file,
-	      file.substring(file.lastIndexOf('/') + 1),
-	      false
-	    ]);
+        file,
+        file.substring(file.lastIndexOf('/') + 1),
+        false
+      ]);
     };
 
     getfiles = function () {
@@ -424,13 +419,13 @@
       ;
       for (i = 0; i < stylesheets.length; i++) {
         href = stylesheets[i].href;
-        if (href !== '' && href !== null && href.substring(href.lastIndexOf('.')+1).toLowerCase() === 'css') {
+        if (href !== '' && href !== null && href.substring(href.lastIndexOf('.') + 1).toLowerCase() === 'css') {
           add(href);
         }
       }
       for (i = 0; i < scripts.length; i++) {
         src = scripts[i].src;
-        if (src !== '' && src !== null && src.substring(src.lastIndexOf('.')+1).toLowerCase() === 'js') {
+        if (src !== '' && src !== null && src.substring(src.lastIndexOf('.') + 1).toLowerCase() === 'js') {
           add(src);
         }
       }
@@ -440,30 +435,30 @@
     win.setTimeout(function () {
       activate();
 
-      SBContent.onclick = function(){
-			  var inputs = SBContent.getElementsByTagName('input');
-			  for(i = 0; i<inputs.length;i+=1) {
-				  files[i][2] = inputs[i].checked;
-				  // highlight
-				  if(inputs[i].checked) {
-					    inputs[i].nextSibling.style.color = "#cea500";
-					} else {
-					  if(/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())){
-					    inputs[i].nextSibling.style.color = "#DDD";
-					  } else {
-						  inputs[i].nextSibling.style.color = "#EEE";
-					  }
-					}
-			  }
-		  };
-		  var SBMethod = document.querySelector('#method');
-      SBMethod.onchange = function(){
-			  method = this.options[this.selectedIndex].value;
-		  };
-		  var SBInterval = document.querySelector('#interval');
-      SBInterval.onchange = function(){
-			  interval = this.options[this.selectedIndex].value; // TODO: bug?
-		  };
+      SBContent.onclick = function () {
+        var inputs = SBContent.getElementsByTagName('input');
+        for (i = 0; i < inputs.length; i += 1) {
+          files[i][2] = inputs[i].checked;
+          // highlight
+          if (inputs[i].checked) {
+            inputs[i].nextSibling.style.color = "#cea500";
+          } else {
+            if (/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())) {
+              inputs[i].nextSibling.style.color = "#DDD";
+            } else {
+              inputs[i].nextSibling.style.color = "#EEE";
+            }
+          }
+        }
+      };
+      var SBMethod = document.querySelector('#method');
+      SBMethod.onchange = function () {
+        method = this.options[this.selectedIndex].value;
+      };
+      var SBInterval = document.querySelector('#interval');
+      SBInterval.onchange = function () {
+        interval = this.options[this.selectedIndex].value; // TODO: bug?
+      };
 
     }, interval);
 
@@ -483,7 +478,15 @@
     F5WinHead = F5win.document.head;
     F5WinBody = F5win.document.body;
 
-    F5WinHead.innerHTML = '<title>' + title + '</title><style>body{ margin:0; overflow:hidden;} iframe{border:none} select, button {margin-left:7px;margin-top:3px;font-size:0.8em;} button {margin-left:8px;} option {padding: 2px 3px 0px;}</style>';
+    F5WinHead.innerHTML = '' + 
+      '<title>' + title + '</title>' +
+      '<style>' +
+      'body{ margin:0; overflow:hidden;} ' +
+      'iframe{border:none} ' +
+      'select, button {margin-left:7px;margin-top:3px;font-size:0.8em;} ' +
+      'button {margin-left:8px;} ' +
+      'option {padding: 2px 3px 0px;}' +
+      '</style>';
 
     iframe = document.createElement('iframe');
     iframe.id = iframeId;
