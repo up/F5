@@ -67,12 +67,16 @@
 
       function setBorderRadius(y, x) {
         var radius = '5px;';
-        return '-webkit-border-' + y + '-' + x + '-radius: ' + radius + '-moz-border-radius-' + y + x + ': ' + radius + 'border-' + y + '-' + x + '-radius: ' + radius;
+        return '-webkit-border-' + y + '-' + x + '-radius: ' + radius + 
+               '-moz-border-radius-' + y + x + ': ' + radius + 
+               'border-' + y + '-' + x + '-radius: ' + radius;
       }
 
       function setBoxShadow() {
         var boxshadow = '-2px 2px 10px #222;';
-        return '-webkit-box-shadow: ' + boxshadow + '-moz-box-shadow: ' + boxshadow + 'box-shadow: ' + boxshadow;
+        return '-webkit-box-shadow: ' + boxshadow + 
+               '-moz-box-shadow: ' + boxshadow + 
+               'box-shadow: ' + boxshadow;
       }
 
       function newDiv(id) {
