@@ -1,10 +1,12 @@
 (function (win) {
 
   var
-    timer = 1000,
+    interval = 1000,
+    method = "header",
     title = '[F5] ' + document.title,
+    iframeId = 'F5Iframe',
     src = window.location.href,
-    F5win, F5WinHead, F5WinBody, iframe, script, getDimentions, setDimentions
+    F5win, F5WinHead, F5WinBody, iframe, script, getDimentions, setDimentions, scriptText
   ;
 
   getDimentions = function () {
@@ -26,40 +28,277 @@
 
   setDimentions = function () {
     var
-      iframe = F5win.document.getElementById('iframe1'),
+      iframe = F5win.document.getElementById(iframeId),
       dim = getDimentions()
     ;
     iframe.style.width = dim[0];
     iframe.style.height = dim[1];
   };
 
-  function F5(win) {
+  function F5(win, iframeId, method, interval) {
     var
-      timer, len, checksum, compare, get, activate, deactivate, add, getScrollXY, 
+      timer, len, checksum, compare, get, activate, deactivate, add, getScrollXY, _SB_,
       checksums = [],
       positions = [],
       count = 0,
       pending = false,
       running = false,
-      interval = 1000,
-      method = "header",
       files = []
     ;
 
-    compare = function () {
-	    var iframe, positions;
-      pending = true;
+		_SB_ = function (files) {
+		  var
+		    position = {
+		      top: 70,
+		      right: 0
+		    },
+		    delay = 10,
+		    waitBeforeHiding = 1000, //sets the time the menu stays out for after the mouse goes off it.
+		    bgcolor = "#222",
+		    contentWidth = 0, // Must be a multiple of 10! 
+		    labelWidth = 35,
+		    timer, SB, SBWrapper, SBLabel, SBContentWrapper, 
+		    label = '&nbsp;<b>F5</b>&nbsp;',
+		    title = '<div id="SBTitle" style="margin:0"><b>Configuration</b></div>',
+		    content = '<div id="SBContent"></div>',
+		    divstyle = 'display:inline-block;color:white;padding: 10px 5px;',
+		    body = document.querySelector('body'),
+		    checked = false
+		  ;
 
-      if (checksums[count] === undefined) {
-        checksums[count] = checksum;
-      } else if (checksums[count] !== checksum) {
-        checksums[count] = checksum;
-        iframe = document.getElementById("iframe1");
-        positions = getScrollXY();
-        iframe.contentWindow.location.reload(true);
-        iframe.onload = function () {
-          iframe.contentWindow.scrollTo(positions[0], positions[1]);
-        };
+		  function setBorderRadius(y, x) {
+		    var radius = '3px;';
+		    return '-webkit-border-' + y + '-' + x + '-radius: ' + radius + 
+		           '-moz-border-radius-' + y + x + ': ' + radius + 
+		           'border-' + y + '-' + x + '-radius: ' + radius;
+		  }
+
+		  function setBoxShadow() {
+		    var boxshadow = '-2px 2px 10px #222;';
+		    return '-webkit-box-shadow: ' + boxshadow +
+		           '-moz-box-shadow: ' + boxshadow +
+		           'box-shadow: ' + boxshadow;
+		  }
+
+		  function newDiv(id) {
+		    var div = document.createElement('div');
+		    if (id !== null) {
+		      div.id = id;
+		    }
+		    return div;
+		  }
+
+		  function show() {
+		    clearTimeout(timer);
+		    if (parseInt(SBWrapper.style.right, 10) < 0) {
+		      timer = setTimeout(function () {
+		        show();
+		      }, delay);
+		      slide(10);
+		    }
+		  };
+
+		  function hide() {
+		    clearTimeout(timer);
+		    timer = setTimeout(function () {
+		      moveBack();
+		    }, waitBeforeHiding);
+		  }
+
+		  function moveBack() {
+		    clearTimeout(timer);
+		    if (parseInt(SBWrapper.style.right, 10) > (-contentWidth)) {
+		      timer = setTimeout(function () {
+		        moveBack();
+		      }, delay);
+		      slide(-10);
+		    }
+		  }
+
+		  function slide(num) {
+		    SBWrapper.style.right = parseInt(SBWrapper.style.right, 10) + num + "px";
+		  }
+
+		  function refreshLayout() {
+			  contentWidth = SBWrapper.offsetWidth;
+			  contentWidth += (10 - (contentWidth %25 10)); // Convert % manual to %25 ##############################################
+			  SBWrapper.style.width = contentWidth + labelWidth + "px";
+			  SBWrapper.style.right = -contentWidth + "px";
+			  SBContentWrapper.style.width = contentWidth - labelWidth + 7 + "px";
+			  SBWrapper.style.visibility = "visible";
+		  }
+
+			function toggleAll() {
+
+			  SBContent = document.querySelector('#SBContent');
+			  var inputs = SBContent.getElementsByTagName('input');
+
+			  checked = checked ? false : true;
+
+			  for(var i = 0; i<inputs.length;i+=1) {
+			    inputs[i].checked = checked;
+			    change(inputs[i], i);
+			  }
+			}
+
+			function change(obj, num) {
+				if(!obj.checked) {
+				  files[num][2] = false;
+				} else {
+				  files[num][2] = true;
+				}
+			}
+
+			function addExternalFiles(files) {
+				
+				var i = 0, span, input, label, br;
+
+				SBContent.innerHTML = '';
+			  //SBContent = document.querySelector('#SBContent');
+			  SBTitle = document.querySelector('#SBTitle');
+
+			  if(files.length > 10) {
+				  SBContent.style.width = '500px';		
+			  }
+			  for(; i<files.length;i+=1) { 
+				  span = document.createElement('span');
+				  span.style.cssText = "display:inline-block;white-space:nowrap;";
+				
+				  input = document.createElement('input');
+				  input.id = "file_" + i;
+				  input.type = "checkbox";
+				  input.value = files[i][1];
+
+				  label = document.createElement('label');
+				  label.htmlFor = "file_" + i;
+				  label.style.cssText = "cursor:pointer; margin-right:12px";
+          label.innerHTML = files[i][1];
+
+          span.appendChild(input);
+          span.appendChild(label);
+          SBContent.appendChild(span);
+
+				  if(files.length <= 10) {
+	          SBContent.appendChild(document.createElement('br'));
+				  }
+			  }
+						
+        SBContent.appendChild(document.createElement('br'));
+
+        SBTitle.appendChild(document.createElement('br'));
+
+			  var select = document.createElement('select');
+			  select.id = "method";
+			  select.style.cssText = "";
+			
+			  var options = [
+			    ["header", "response header"],
+			    ["length", "content length"],
+			    ["content", "content"]
+			  ];
+			
+			  for(i = 0; i<options.length;i+=1) { 
+				  var option = document.createElement('option');
+				  option.value = options[i][0];
+				  option.innerHTML = "check by " + options[i][1];
+	        select.appendChild(option);
+        }
+
+        SBTitle.appendChild(select);
+
+			  if(files.length <= 10) {
+          SBTitle.appendChild(document.createElement('br'));
+			  }
+
+			  select = document.createElement('select');
+			  select.id = "interval";
+			  select.style.cssText = "";
+			
+			  var options = [1000, 2000, 3000, 5000, 10000];
+			
+			  for(i = 0; i<options.length;i+=1) { 
+				  var option = document.createElement('option');
+				  option.value = options[i][0];
+				  option.innerHTML = "interval " + options[i];
+	        select.appendChild(option);
+        }
+
+        SBTitle.appendChild(select);
+
+			  SBTitle.innerHTML+= '<button onclick="F5.toggleAll()">TOGGLE</button>';
+        SBTitle.appendChild(document.createElement('br'));
+        SBTitle.appendChild(document.createElement('br'));
+
+			  refreshLayout();
+				
+			}
+
+		  SB = newDiv(null);
+		  SB.style.cssText = '' + 
+		    'font-family:arial;' + 
+		    'position:absolute;right:' + position.right + 'px;top:' + position.top + 'px;' + 
+		    'z-index: 1000;';
+		  body.appendChild(SB);
+
+		  SBWrapper = newDiv('SBWrapper');
+		  SBWrapper.onmouseover = show;
+		  SBWrapper.onmouseout = hide;
+		  SBWrapper.style.cssText = '' + 
+		    'position:absolute;right:0;top:0;' +
+		    'visibility:hidden;';
+		  SB.appendChild(SBWrapper);
+
+		  SBLabel = newDiv(null);
+		  SBLabel.style.cssText = '' + 
+		    divstyle + 
+		    setBorderRadius('top', 'left') + 
+		    setBorderRadius('bottom', 'left') + 
+		    setBoxShadow() +
+		    'vertical-align:top;' +
+		    'background-color:#222;';
+		  SBLabel.innerHTML = label;
+		  SBWrapper.appendChild(SBLabel);
+
+		  SBContentWrapper = newDiv(null);
+		  SBContentWrapper.style.cssText = '' + 
+		    divstyle + 
+		    setBorderRadius('bottom', 'left') + 
+		    setBoxShadow() +
+		    'padding-left:20px;' +
+		    'background-color:#222;';
+		  SBContentWrapper.innerHTML = title + content;
+		  SBWrapper.appendChild(SBContentWrapper);
+		  
+		  body.style.overflowX = 'hidden';
+
+			addExternalFiles(files);
+
+		  window['F5']['toggleAll'] = toggleAll;
+		  window['F5']['change'] = change;
+
+		};
+
+    compare = function () {
+
+	    //console.log(count + '-' + files.length);
+	    //console.log(count + '-' + files[count]);
+
+      if(files[count][2] && arguments[0]) {
+		    var iframe, positions;
+	      pending = true;
+
+	      if (checksums[count] === undefined) {
+	        checksums[count] = checksum;
+	      } else if (checksums[count] !== checksum) {
+	        checksums[count] = checksum;
+	        iframe = document.getElementById(iframeId);
+	        positions = getScrollXY();
+	        iframe.contentWindow.location.reload(true);
+	        iframe.onload = function () {
+	          iframe.contentWindow.scrollTo(positions[0], positions[1]);
+	        };
+	      }
+	
       }
 
       count++;
@@ -76,7 +315,7 @@
       var
         posX = 0,
         posY = 0,
-        iframe = document.getElementById("iframe1"),
+        iframe = document.getElementById(iframeId),
         iWin = iframe.contentWindow,
         iDoc = iWin.document,
         iBody = iDoc.body,
@@ -100,40 +339,45 @@
     };
 
     get = function () {
-      var req = new XMLHttpRequest();
-      req.onreadystatechange = function () {
-        if (req.readyState === 4) {
-          switch (method) {
-          case "header":
-            if (req.status === 200) {
-              checksum = req.getResponseHeader("Last-Modified").toString();
-              compare();
-            }
-            break;
-          case "length":
-            checksum = req.responseText.toString().length;
-            compare();
-            break;
-          case "content":
-            checksum = req.responseText.toString();
-            compare();
-            break;
-          }
-        }
-      };
-      req.open("GET", files[count] + "?" + new Date().getTime(), true);
-      req.send(null);
+	    if(files[count][2]) {
+	      var req = new XMLHttpRequest();
+	      req.onreadystatechange = function () {
+	        if (req.readyState === 4) {
+	          switch (method) {
+	          case "header":
+	            if (req.status === 200) {
+	              checksum = req.getResponseHeader("Last-Modified").toString();
+	              compare(true);
+	            }
+	            break;
+	          case "length":
+	            checksum = req.responseText.toString().length;
+	            compare(true);
+	            break;
+	          case "content":
+	            checksum = req.responseText.toString();
+	            compare(true);
+	            break;
+	          }
+	        }
+	      };
+	      req.open("GET", files[count][0] + "?" + new Date().getTime(), true);
+	      req.send(null);
+      } else {
+	      compare(false);
+      }
     };
 
     activate = function () {
       files = getfiles();
+	    _SB_(files);
       len = files.length;
       timer = win.setInterval(function () {
         if (!pending) {
           get();
         }
       }, interval);
-      running = true;
+      running = true;      
     };
 
     deactivate = function () {
@@ -142,23 +386,29 @@
     };
 
     add = function (file) {
-      files.push(file);
+      files.push([
+	      file,
+	      file.substring(file.lastIndexOf('/') + 1),
+	      false
+	    ]);
     };
 
     getfiles = function () {
       var
-        i, href, src, iframe = document.getElementById("iframe1"),
+        i, href, src, iframe = document.getElementById(iframeId),
         doc = iframe.contentWindow.document,
         stylesheets = doc.styleSheets,
         scripts = doc.getElementsByTagName('script')
       ;
       for (i = 0; i < stylesheets.length; i++) {
         href = stylesheets[i].href;
-        add(href);
+        if (href !== '' && href !== null && href.substring(href.lastIndexOf('.')+1).toLowerCase() === 'css') {
+          add(href);
+        }
       }
       for (i = 0; i < scripts.length; i++) {
         src = scripts[i].src;
-        if (src !== '' && src.substring(src.length - 5) !== 'f5.js') {
+        if (src !== '' && src !== null && src.substring(src.lastIndexOf('.')+1).toLowerCase() === 'js') {
           add(src);
         }
       }
@@ -167,6 +417,23 @@
 
     win.setTimeout(function () {
       activate();
+
+      SBContent.onclick = function(){
+			  var inputs = SBContent.getElementsByTagName('input');
+			  for(i = 0; i<inputs.length;i+=1) {
+				  files[i][2] = inputs[i].checked;
+					//F5.change(this,i);
+			  }
+		  };
+		  var SBMethod = document.querySelector('#method');
+      SBMethod.onchange = function(){
+			  method = this.options[this.selectedIndex].value;
+		  };
+		  var SBInterval = document.querySelector('#interval');
+      SBInterval.onchange = function(){
+			  interval = this.options[this.selectedIndex].value; // TODO: bug?
+		  };
+
     }, interval);
 
     win['F5'] = {};
@@ -176,27 +443,28 @@
 
   }
 
-  if (document.getElementById('iframe1') === null) {
+  if (document.getElementById(iframeId) === null) {
 
-    var hasInnerText = (document.getElementsByTagName("body")[0].innerText != undefined) ? true : false;
+    hasInnerText = (document.getElementsByTagName("body")[0].innerText != undefined) ? true : false;
+    scriptText = '(' + F5.toString() + '(window, "' + iframeId + '", "' + method + '", ' + interval + '));';
 
     F5win = window.open();
     F5WinHead = F5win.document.head;
     F5WinBody = F5win.document.body;
 
-    F5WinHead.innerHTML = '<title>' + title + '</title><style>body{margin:0;overflow:hidden}</style>';
+    F5WinHead.innerHTML = '<title>' + title + '</title><style>body{margin:0;overflow:hidden;} iframe{border:none}</style>';
 
     iframe = document.createElement('iframe');
-    iframe.id = "iframe1";
+    iframe.id = iframeId;
     iframe.src = src;
     F5WinBody.appendChild(iframe);
 
     script = document.createElement('script');
     script.type = "text/javascript";
     if (!hasInnerText) {
-      script.textContent = '(' + F5.toString() + '(window));';
+      script.textContent = scriptText;
     } else {
-      script.innerText = '(' + F5.toString() + '(window));';
+      script.innerText = scriptText;
     }
 
     F5WinBody.appendChild(script);
@@ -208,7 +476,6 @@
     }
 
     F5win.onresize = setDimentions;
-    F5win.onunload = function () {};
 
     document.close();
 
