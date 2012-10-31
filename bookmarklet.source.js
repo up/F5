@@ -116,7 +116,8 @@
 
       function refreshLayout() {
         contentWidth = SBWrapper.offsetWidth + 15;
-        contentWidth += (10 - (contentWidth % 25 10)); // Convert % manual to %25 ##############################################
+        // Convert % manual to %25 ##############################################
+        contentWidth += (10 - (contentWidth % 25 10)); 
         SBWrapper.style.width = contentWidth + labelWidth + "px";
         SBWrapper.style.right = -contentWidth + "px";
         SBContentWrapper.style.width = contentWidth - labelWidth + 7 + "px";
