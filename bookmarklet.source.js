@@ -202,7 +202,12 @@
 
         var para = document.createElement('p');
         para.style.cssText = "text-align:right; margin: 10px 0";
-        para.innerHTML = '<a href="https://github.com/up/F5" style="background-color: #666;display:inline-block;padding:2px 4px;color:#E8E8E8;text-decoration:none;font-size: 0.7em;">F5 @ github</a>';
+        para.innerHTML = '' +
+          '<a href="https://github.com/up/F5" ' +
+          'style="' + 
+          '  background-color: #666;display:inline-block;padding:2px 4px;' +
+          '  color:#E8E8E8;text-decoration:none;font-size: 0.7em; ' +
+          '">F5 @ github</a>';
         SBContent.appendChild(para);
 
         select = document.createElement('select');
