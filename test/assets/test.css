@@ -2,7 +2,6 @@ body {
   background-color: #cea500;
   text-shadow: 0px 0px 40px #000;
   color: black;
-  font-size: 30px;
 }
 body h1,
 body p {
@@ -11,12 +10,12 @@ body p {
 body h1 {
   margin: 30px;
   color: #black;
-  font-size: 70px;
+  font-size: 40px;
   font-family: verdana;
   /*text-transform: uppercase;*/
 
 }
 p:nth-of-type(1) {
   margin-right: 50%;
-  font-size: 40px;
+  font-size: 30px;
 }
