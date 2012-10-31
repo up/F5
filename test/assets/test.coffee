@@ -9,3 +9,6 @@ mobyDick = "
 "
 p = document.getElementsByTagName("p")[0]
 p.innerHTML = mobyDick
+
+h1 = document.getElementsByTagName("h1")[0]
+h1.style.textTransform = 'lowercase';
