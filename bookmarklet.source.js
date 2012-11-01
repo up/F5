@@ -118,7 +118,7 @@
 
       function refreshLayout() {
         contentWidth = SBWrapper.offsetWidth + 15;
-        // Convert % manual to %25 ##############################################
+        // Convert % manual to %25 for bookmarklet ##############################################
         contentWidth += 10 - (contentWidth %25 10); 
         SBWrapper.style.width = contentWidth + labelWidth + "px";
         SBWrapper.style.right = -contentWidth + "px";
