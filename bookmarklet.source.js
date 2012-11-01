@@ -6,7 +6,7 @@
     title = '[F5] ' + document.title,
     iframeId = 'F5Iframe',
     src = window.location.href,
-    F5win, F5WinHead, F5WinBody, iframe, script, getDimentions, setDimentions, scriptText
+    F5win, F5WinHead, F5WinBody, iframe, script, getDimentions, setDimentions, scriptText, SBContent, SBMethod, hasInnerText
   ;
 
   getDimentions = function () {
@@ -15,7 +15,7 @@
       width = document.body.offsetWidth;
       height = document.body.offsetHeight;
     }
-    if (document.compatMode == 'CSS1Compat' && document.documentElement && document.documentElement.offsetWidth) {
+    if (document.compatMode === 'CSS1Compat' && document.documentElement && document.documentElement.offsetWidth) {
       width = document.documentElement.offsetWidth;
       height = document.documentElement.offsetHeight;
     }
@@ -37,27 +37,25 @@
 
   function F5(win, iframeId, method, interval) {
     var
-      timer, len, checksum, compare, get, activate, deactivate, add, getScrollXY, _SB_, checksums = [],
-      positions = [],
+      timer, len, checksum, compare, get, getfiles, activate, deactivate, add, getScrollXY, _SB_, checksums = [],
       count = 0,
       pending = false,
       running = false,
       files = []
    ;
-
+  
     _SB_ = function (files) {
       var
         position = {
-	        top: 70,
-	        right: 0
-	      },
-	      delay = 5,
-	      waitBeforeHiding = 500,
-	      //sets the time the menu stays out for after the mouse goes off it.
-	      bgcolor = "#222",
+          top: 70,
+          right: 0
+        },
+        delay = 5,
+        //sets the time the menu stays out for after the mouse goes off it.
+        waitBeforeHiding = 500,
         contentWidth = 0,
         labelWidth = 35,
-        timer, SB, SBWrapper, SBLabel, SBContentWrapper, label = '&nbsp;<b>F5</b>&nbsp;',
+        timer, SB, SBWrapper, SBLabel, SBContentWrapper, SBTitle, label = '&nbsp;<b>F5</b>&nbsp;',
         title = '<div id="SBTitle" style="margin:0"></div>',
         content = '<div id="SBContent"></div>',
         divstyle = 'display:inline-block;color:white;padding: 10px 5px;',
@@ -87,6 +85,10 @@
         return div;
       }
 
+      function slide(num) {
+        SBWrapper.style.right = parseInt(SBWrapper.style.right, 10) + num + "px";
+      }
+
       function show() {
         clearTimeout(timer);
         if (parseInt(SBWrapper.style.right, 10) < 0) {
@@ -95,13 +97,6 @@
           }, delay);
           slide(10);
         }
-      };
-
-      function hide() {
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-          moveBack();
-        }, waitBeforeHiding);
       }
 
       function moveBack() {
@@ -114,28 +109,42 @@
         }
       }
 
-      function slide(num) {
-        SBWrapper.style.right = parseInt(SBWrapper.style.right, 10) + num + "px";
+      function hide() {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          moveBack();
+        }, waitBeforeHiding);
       }
 
       function refreshLayout() {
         contentWidth = SBWrapper.offsetWidth + 15;
         // Convert % manual to %25 ##############################################
-        contentWidth += (10 - (contentWidth % 25 10)); 
+        contentWidth += 10 - (contentWidth %25 10); 
         SBWrapper.style.width = contentWidth + labelWidth + "px";
         SBWrapper.style.right = -contentWidth + "px";
         SBContentWrapper.style.width = contentWidth - labelWidth + 7 + "px";
         SBWrapper.style.visibility = "visible";
       }
 
+      function change(obj, num) {
+        if (!obj.checked) {
+          files[num][2] = false;
+        } else {
+          files[num][2] = true;
+        }
+      }
+
       function toggleAll() {
 
         SBContent = document.querySelector('#SBContent');
-        var inputs = SBContent.getElementsByTagName('input');
+        var 
+          inputs = SBContent.getElementsByTagName('input'),
+          i = 0
+        ;
 
         checked = checked ? false : true;
 
-        for (var i = 0; i < inputs.length; i += 1) {
+        for (; i < inputs.length; i += 1) {
           inputs[i].checked = checked;
           change(inputs[i], i);
 
@@ -153,19 +162,11 @@
 
       }
 
-      function change(obj, num) {
-        if (!obj.checked) {
-          files[num][2] = false;
-        } else {
-          files[num][2] = true;
-        }
-      }
-
       function createSidebarContent(files) {
 
         var 
           i = 0,
-          span, input, label, br, select, options, option
+          span, input, label, select, options, option, para
         ;
 
         function addElement(tagname, parent) {
@@ -173,7 +174,6 @@
         }
 
         SBContent.innerHTML = '';
-        //SBContent = document.querySelector('#SBContent');
         SBTitle = document.querySelector('#SBTitle');
 
         if (files.length > 10) {
@@ -205,7 +205,7 @@
           }
         }
 
-        var para = document.createElement('p');
+        para = document.createElement('p');
         para.style.cssText = "text-align:right; margin: 10px 0";
         para.innerHTML = '' +
           '<a href="https://github.com/up/F5" ' +
@@ -301,15 +301,13 @@
 
       createSidebarContent(files);
 
-      window['F5']['toggleAll'] = toggleAll;
-      window['F5']['change'] = change;
+      window.F5.toggleAll = toggleAll;
+      window.F5.change = change;
 
     };
 
     compare = function () {
 
-      //console.log(count + '-' + files.length);
-      //console.log(count + '-' + files[count]);
       if (files[count][2] && arguments[0]) {
         var iframe, positions;
         pending = true;
@@ -349,7 +347,7 @@
         iElem = iDoc.documentElement
       ;
 
-      if (typeof(iWin.pageYOffset) == 'number') {
+      if (typeof(iWin.pageYOffset) === 'number') {
         //Netscape compliant
         posY = iWin.pageYOffset;
         posX = iWin.pageXOffset;
@@ -395,6 +393,28 @@
       }
     };
 
+    getfiles = function () {
+      var
+        i, href, src, iframe = document.getElementById(iframeId),
+        doc = iframe.contentWindow.document,
+        stylesheets = doc.styleSheets,
+        scripts = doc.getElementsByTagName('script')
+      ;
+      for (i = 0; i < stylesheets.length; i++) {
+        href = stylesheets[i].href;
+        if (href !== '' && href !== null && href.substring(href.lastIndexOf('.') + 1).toLowerCase() === 'css') {
+          add(href);
+        }
+      }
+      for (i = 0; i < scripts.length; i++) {
+        src = scripts[i].src;
+        if (src !== '' && src !== null && src.substring(src.lastIndexOf('.') + 1).toLowerCase() === 'js') {
+          add(src);
+        }
+      }
+      return files;
+    };
+
     activate = function () {
       files = getfiles();
       _SB_(files);
@@ -420,34 +440,15 @@
       ]);
     };
 
-    getfiles = function () {
-      var
-        i, href, src, iframe = document.getElementById(iframeId),
-        doc = iframe.contentWindow.document,
-        stylesheets = doc.styleSheets,
-        scripts = doc.getElementsByTagName('script')
-      ;
-      for (i = 0; i < stylesheets.length; i++) {
-        href = stylesheets[i].href;
-        if (href !== '' && href !== null && href.substring(href.lastIndexOf('.') + 1).toLowerCase() === 'css') {
-          add(href);
-        }
-      }
-      for (i = 0; i < scripts.length; i++) {
-        src = scripts[i].src;
-        if (src !== '' && src !== null && src.substring(src.lastIndexOf('.') + 1).toLowerCase() === 'js') {
-          add(src);
-        }
-      }
-      return files;
-    };
-
     win.setTimeout(function () {
       activate();
 
       SBContent.onclick = function () {
-        var inputs = SBContent.getElementsByTagName('input');
-        for (i = 0; i < inputs.length; i += 1) {
+        var 
+          inputs = SBContent.getElementsByTagName('input'), 
+          i = 0
+        ;
+        for (; i < inputs.length; i += 1) {
           files[i][2] = inputs[i].checked;
           // highlight
           if (inputs[i].checked) {
@@ -461,7 +462,7 @@
           }
         }
       };
-      var SBMethod = document.querySelector('#method');
+      SBMethod = document.querySelector('#method');
       SBMethod.onchange = function () {
         method = this.options[this.selectedIndex].value;
       };
@@ -470,18 +471,18 @@
         interval = this.options[this.selectedIndex].value; // TODO: bug?
       };
 
-    }, interval);
+    }, 2000);
 
-    win['F5'] = {};
-    win['F5']['activate'] = activate;
-    win['F5']['deactivate'] = deactivate;
-    win['F5']['running'] = running;
+    window.F5 = {};
+    window.F5.activate = activate;
+    window.F5.deactivate = deactivate;
+    window.F5.running = running;
 
   }
 
   if (document.getElementById(iframeId) === null) {
 
-    hasInnerText = (document.getElementsByTagName("body")[0].innerText != undefined) ? true : false;
+    hasInnerText = (document.getElementsByTagName("body")[0].innerText !== undefined) ? true : false;
     scriptText = '(' + F5.toString() + '(window, "' + iframeId + '", "' + method + '", ' + interval + '));';
 
     F5win = window.open();
