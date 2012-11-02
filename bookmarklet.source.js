@@ -155,7 +155,7 @@
             if (/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())) {
               inputs[i].nextSibling.style.color = "#DDD";
             } else {
-              inputs[i].nextSibling.style.color = "#EEE";
+              inputs[i].nextSibling.style.color = "#FFF";
             }
           }
         }
@@ -457,7 +457,7 @@
             if (/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())) {
               inputs[i].nextSibling.style.color = "#DDD";
             } else {
-              inputs[i].nextSibling.style.color = "#EEE";
+              inputs[i].nextSibling.style.color = "#FFF";
             }
           }
         }
