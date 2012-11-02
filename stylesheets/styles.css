@@ -129,7 +129,8 @@ a.button {
 	color: #000;
 }
 
-section ol {
+section ol,
+section ul {
   position: relative;
   top:-8px;
 }
