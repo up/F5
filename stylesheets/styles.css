@@ -130,7 +130,8 @@ a.button {
 }
 
 section ul {
-  margin-top: 3px;
+  position: relative;
+  top:-4px;
 }
 
 header li {
