@@ -149,13 +149,16 @@
           change(inputs[i], i);
 
           // highlight
+          ext = inputs[i].nextSibling.innerHTML.toLowerCase();
           if (inputs[i].checked) {
             inputs[i].nextSibling.style.color = "#cea500";
           } else {
-            if (/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())) {
+            if (/\.css/.test(ext)) {
               inputs[i].nextSibling.style.color = "#DDD";
-            } else {
+            } else if (/\.js/.test(ext)) {
               inputs[i].nextSibling.style.color = "#FFF";
+            } else {
+             inputs[i].nextSibling.style.color = "#FFFFCC"; // images
             }
           }
         }
@@ -166,7 +169,7 @@
 
         var 
           i = 0,
-          span, input, label, select, options, option, para
+          span, input, label, select, options, option, para, ext
         ;
 
         function addElement(tagname, parent) {
@@ -191,9 +194,15 @@
           label = document.createElement('label');
           label.htmlFor = "file_" + i;
           label.style.cssText = "cursor:pointer; margin-right:12px";
-          if (/\.css/.test(files[i][1].toLowerCase())) {
+          ext = files[i][1].toLowerCase();
+          if (/\.css/.test(ext)) {
             label.style.cssText += "color:#DDD;";
+          } else if (/\.js/.test(ext)) {
+            label.style.cssText += "color:#FFF";
+          } else {
+           label.style.cssText += "color:#FFFFCC"; // images
           }
+
           label.innerHTML = files[i][1];
 
           span.appendChild(input);
@@ -398,7 +407,10 @@
         i, href, src, iframe = document.getElementById(iframeId),
         doc = iframe.contentWindow.document,
         stylesheets = doc.styleSheets,
-        scripts = doc.getElementsByTagName('script')
+        scripts = doc.getElementsByTagName('script'),
+        imgs =  doc.getElementsByTagName('img'),
+        img_ext = 'png gif svg jpg jpeg',
+        ext, hash = {}
       ;
       for (i = 0; i < stylesheets.length; i++) {
         href = stylesheets[i].href;
@@ -412,6 +424,18 @@
           add(src);
         }
       }
+      for (i = 0; i < imgs.length; i++) {
+        src = imgs[i].src;
+		    ext = src.substring(src.lastIndexOf('.') + 1).toLowerCase();
+		    if (src !== '' && img_ext.indexOf(ext) !== -1) {
+			      hash[src] = true;
+			    }
+			  }
+
+			  // push the unique image URLs
+			  for (url in hash) {
+			    add(url);
+			  }
       return files;
     };
 
@@ -446,18 +470,21 @@
       SBContent.onclick = function () {
         var 
           inputs = SBContent.getElementsByTagName('input'), 
-          i = 0
+          i = 0, ext
         ;
         for (; i < inputs.length; i += 1) {
           files[i][2] = inputs[i].checked;
           // highlight
+          ext = inputs[i].nextSibling.innerHTML.toLowerCase();
           if (inputs[i].checked) {
             inputs[i].nextSibling.style.color = "#cea500";
           } else {
-            if (/\.css/.test(inputs[i].nextSibling.innerHTML.toLowerCase())) {
+            if (/\.css/.test(ext)) {
               inputs[i].nextSibling.style.color = "#DDD";
-            } else {
-              inputs[i].nextSibling.style.color = "#FFF";
+            } else if (/\.js/.test(ext)) {
+	              inputs[i].nextSibling.style.color = "#FFF";
+	            } else {
+              inputs[i].nextSibling.style.color = "#FFFFCC"; // images
             }
           }
         }
