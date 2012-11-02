@@ -101,7 +101,8 @@ header {
   position:fixed;
 }
 
-header ul {
+header ul,
+a.button {
   list-style:none;
   height:40px;
   
