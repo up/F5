@@ -122,6 +122,10 @@ a.button {
   width:270px;
 }
 
+a.button {
+  padding: 20px;	
+}
+
 header li {
   width:89px;
   float:left;
