@@ -105,7 +105,8 @@ header {
 }
 
 header ul,
-a.button {
+a.button,
+section span {
   list-style:none;
   height:40px;
   
@@ -130,6 +131,16 @@ a.button {
   text-decoration: none;
 	font-weight: bold;
 	color: #000;
+}
+section span {
+	display: inline-block;
+  padding: 0px 3px 1px 2px;
+  width: auto;
+  height: auto;
+}
+section iframe {
+  margin-bottom:20px;
+  border: 1px solid #AAA;
 }
 
 section ol,
