@@ -467,7 +467,7 @@
     };
 
       win.setTimeout(function () {
-      //activate();
+      activate();
 
       SBContent.onclick = function () {
         var 
@@ -500,7 +500,7 @@
         interval = this.options[this.selectedIndex].value; // TODO: bug?
       };
 
-    }, 2000);
+    }, 100);
 
 
   }
