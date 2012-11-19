@@ -2,7 +2,7 @@
 
   var
     interval = 1000,
-    method = "header",
+    method = "Last-Modified",
     title = '[F5] ' + document.title,
     iframeId = 'F5Iframe',
     src = window.location.href,
@@ -229,9 +229,9 @@
         select.style.cssText = "";
 
         options = [
-          ["header", "response header"],
-          ["length", "content length"],
-          ["content", "content"]
+          ["Last-Modified", "Last-Modified"],
+          ["Content-Length", "Content-Length"]
+          //["content", "content"]
         ];
 
         for (i = 0; i < options.length; i += 1) {
@@ -376,26 +376,27 @@
       if (files[count][2]) {
         var req = new XMLHttpRequest();
         req.onreadystatechange = function () {
-          if (req.readyState === 4) {
+          if (req.readyState === 4 && req.status === 200) {
             switch (method) {
-            case "header":
-              if (req.status === 200) {
-                checksum = req.getResponseHeader("Last-Modified").toString();
-                compare(true);
-              }
+            case "Last-Modified":
+              checksum = req.getResponseHeader("Last-Modified").toString();
+              break;
+            case "Content-Length":
+              checksum = req.getResponseHeader("Content-Length");
+              break;
+            /*
+            case "content":
+              checksum = req.responseText.toString();
               break;
             case "length":
               checksum = req.responseText.toString().length;
-              compare(true);
               break;
-            case "content":
-              checksum = req.responseText.toString();
-              compare(true);
-              break;
+            */
             }
+            compare(true);
           }
         };
-        req.open("GET", files[count][0] + "?" + new Date().getTime(), true);
+        req.open("HEAD", files[count][0] + "?" + new Date().getTime(), true);
         req.send(null);
       } else {
         compare(false);
@@ -412,6 +413,7 @@
         img_ext = 'png gif svg jpg jpeg',
         ext, hash = {}
       ;
+
       for (i = 0; i < stylesheets.length; i++) {
         href = stylesheets[i].href;
         if (href !== '' && href !== null && href.substring(href.lastIndexOf('.') + 1).toLowerCase() === 'css') {
@@ -426,16 +428,16 @@
       }
       for (i = 0; i < imgs.length; i++) {
         src = imgs[i].src;
-		    ext = src.substring(src.lastIndexOf('.') + 1).toLowerCase();
-		    if (src !== '' && img_ext.indexOf(ext) !== -1) {
-			      hash[src] = true;
-			    }
-			  }
+        ext = src.substring(src.lastIndexOf('.') + 1).toLowerCase();
+        if (src !== '' && img_ext.indexOf(ext) !== -1) {
+            hash[src] = true;
+          }
+        }
 
-			  // push the unique image URLs
-			  for (url in hash) {
-			    add(url);
-			  }
+        // push the unique image URLs
+        for (url in hash) {
+          add(url);
+        }
       return files;
     };
 
@@ -464,8 +466,8 @@
       ]);
     };
 
-    win.setTimeout(function () {
-      activate();
+      win.setTimeout(function () {
+      //activate();
 
       SBContent.onclick = function () {
         var 
@@ -482,8 +484,8 @@
             if (/\.css/.test(ext)) {
               inputs[i].nextSibling.style.color = "#DDD";
             } else if (/\.js/.test(ext)) {
-	              inputs[i].nextSibling.style.color = "#FFF";
-	            } else {
+                inputs[i].nextSibling.style.color = "#FFF";
+              } else {
               inputs[i].nextSibling.style.color = "#FFFFCC"; // images
             }
           }
@@ -500,15 +502,10 @@
 
     }, 2000);
 
-    window.F5 = {};
-    window.F5.activate = activate;
-    window.F5.deactivate = deactivate;
-    window.F5.running = running;
 
   }
 
-  if (document.getElementById(iframeId) === null) {
-
+  
     hasInnerText = (document.getElementsByTagName("body")[0].innerText !== undefined) ? true : false;
     scriptText = '(' + F5.toString() + '(window, "' + iframeId + '", "' + method + '", ' + interval + '));';
 
@@ -539,7 +536,12 @@
       script.innerText = scriptText;
     }
 
-    F5WinBody.appendChild(script);
+    var completeIVal = setInterval(function(){
+      if(iframe.contentWindow.document.readyState === 'complete') {
+        F5WinBody.appendChild(script);
+        clearInterval(completeIVal);
+      }
+    }, 100);
 
     setDimentions();
 
@@ -551,21 +553,9 @@
 
     document.close();
 
-  } else {
-
-    /*
-    if(typeof F5 === 'object') {
-      if(F5.running) {
-        F5.deactivate();
-        F5.running = false;
-      } else {
-        F5.activate();
-        F5.running = true;
-      }
-    }  
-    */
-    // document.write ALWAYS starts a new page unless there is one currently being loaded.
-    //window.history.back();
-  }
+    F5win.F5 = {};
+    F5win.F5.activate = activate;
+    F5win.F5.deactivate = deactivate;
+    F5win.F5.running = running;
 
 })(window);
