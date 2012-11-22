@@ -157,15 +157,15 @@
             inputs[i].nextSibling.style.color = "#cea500";
           } else {
             if(inputs.length > 10) {
-		          if (/\.css/.test(ext)) {
-	              inputs[i].nextSibling.style.color = "#DDD";
-	            } else if (/\.js/.test(ext)) {
-	              inputs[i].nextSibling.style.color = "#FFF";
-	            } else {
-	              inputs[i].nextSibling.style.color = "#FFFFCC"; // images
-	            }
+              if (/\.css/.test(ext)) {
+                inputs[i].nextSibling.style.color = "#DDD";
+              } else if (/\.js/.test(ext)) {
+                inputs[i].nextSibling.style.color = "#FFF";
+              } else {
+                inputs[i].nextSibling.style.color = "#FFFFCC"; // images
+              }
             } else {
-	            inputs[i].nextSibling.style.color = "#DDD";
+              inputs[i].nextSibling.style.color = "#DDD";
             }
 
           }
@@ -193,10 +193,10 @@
           SBContent.style.width = '500px';
 
           jtabs.create(
-	          ['CSS', ''], 
-	          ['JavaScript', ''], 
-	          ['Images', '']
-	        ).appendTo(SBContent);
+            ['CSS', ''], 
+            ['JavaScript', ''], 
+            ['Images', '']
+          ).appendTo(SBContent);
         }
         var tabs = document.querySelectorAll('#tabContent > div');
         for (; i < files.length; i += 1) {
@@ -597,23 +597,23 @@
       }
 
       addStyleRules(
-	      '#tabs{ margin:10px 0 0; }' + 
-	      '#tabs ul { ' +
-	      '  list-style:none; display:block; overflow:hidden; ' +
-	      '  margin:0; padding:0; position: relative; top:1px;' +
-	      '}' + 
-	      '#tabs li { ' + 
-	      '  float:left; border:1px solid #444; padding:5px 8px; ' +
-	      '  cursor:pointer; border-bottom:none; margin-right:4px;' + 
-	      '  font-family:verdana; font-size:.8em; font-weight:bold; color:#AAA; ' + 
-	      '}' + 
-	      '#tabs .selected{ ' +
-	      '  background-color:#444; color:#cea500; font-weight: bold;' +
-	      '}' + 
-	      '#tabs #tabContent div { ' +
-	      '  padding:10px; color:#EEE; background-color:#444; overflow:hidden;' +
-	      '}'
-	    );
+        '#tabs{ margin:10px 0 0; }' + 
+        '#tabs ul { ' +
+        '  list-style:none; display:block; overflow:hidden; ' +
+        '  margin:0; padding:0; position: relative; top:1px;' +
+        '}' + 
+        '#tabs li { ' + 
+        '  float:left; border:1px solid #444; padding:5px 8px; ' +
+        '  cursor:pointer; border-bottom:none; margin-right:4px;' + 
+        '  font-family:verdana; font-size:.8em; font-weight:bold; color:#AAA; ' + 
+        '}' + 
+        '#tabs .selected{ ' +
+        '  background-color:#444; color:#cea500; font-weight: bold;' +
+        '}' + 
+        '#tabs #tabContent div { ' +
+        '  padding:10px; color:#EEE; background-color:#444; overflow:hidden;' +
+        '}'
+      );
 
       win['jtabs'] = {};
       win['jtabs']['create'] = create;
@@ -691,7 +691,7 @@
   } else {
     script.innerText = scriptText;
   }
-
+  
   var completeIVal = setInterval(function () {
     if (iframe.contentWindow.document.readyState === 'complete') {
       F5WinBody.appendChild(script);
