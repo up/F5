@@ -5,7 +5,7 @@
     method = "Last-Modified",
     title = '[F5] ' + document.title,
     iframeId = 'F5Iframe',
-    src = window.location.href,
+    src = window.location.href, jtabs,
     F5win, F5WinHead, F5WinBody, iframe, script, getDimentions, setDimentions, scriptText, SBContent, SBMethod, hasInnerText
   ;
 
@@ -65,18 +65,18 @@
 
       function setBorderRadius(y, x) {
         var radius = '5px;';
-        return 
-          '-webkit-border-' + y + '-' + x + '-radius: ' + radius + 
-          '-moz-border-radius-' + y + x + ': ' + radius + 
-          'border-' + y + '-' + x + '-radius: ' + radius;
+        return '-webkit-border-' + y + '-' + x + '-radius: ' + radius + 
+               '-moz-border-radius-' + y + x + ': ' + radius + 
+               'border-' + y + '-' + x + '-radius: ' + radius
+        ;
       }
 
       function setBoxShadow() {
         var boxshadow = '-2px 2px 10px #222;';
-        return 
-          '-webkit-box-shadow: ' + boxshadow + 
-          '-moz-box-shadow: ' + boxshadow + 
-          'box-shadow: ' + boxshadow;
+        return '-webkit-box-shadow: ' + boxshadow + 
+               '-moz-box-shadow: ' + boxshadow + 
+               'box-shadow: ' + boxshadow
+        ;
       }
 
       function newDiv(id) {
@@ -121,7 +121,7 @@
       function refreshLayout() {
         contentWidth = SBWrapper.offsetWidth + 15;
         // Convert % manual to %25 for bookmarklet ##############################################
-        contentWidth += 10 - (contentWidth %25 10);
+        contentWidth+= (10 - (contentWidth % 10));
         SBWrapper.style.width = contentWidth + labelWidth + "px";
         SBWrapper.style.right = -contentWidth + "px";
         SBContentWrapper.style.width = contentWidth - labelWidth + 7 + "px";
@@ -152,7 +152,7 @@
           change(inputs[i], i);
 
           // highlight
-          ext = inputs[i].nextSibling.innerHTML.toLowerCase();
+          var ext = inputs[i].nextSibling.innerHTML.toLowerCase();
           if (inputs[i].checked) {
             inputs[i].nextSibling.style.color = "#cea500";
           } else {
@@ -470,10 +470,12 @@
           hash[src] = true;
         }
       }
-
+			
       // push the unique image URLs
-      for (url in hash) {
-        add(url);
+      for (var url in hash) {
+				if(hash.hasOwnProperty(url)) {
+					add(url);		
+				}
       }
       return files;
     };
@@ -585,7 +587,7 @@
         tab_container.id = "tabs";
         tab_ul.id = "sidebarTabs";
         tab_container.appendChild(tab_ul);
-        for (i = 0; i < len; i++) {
+        for (var i = 0; i < len; i++) {
           tab_ul.appendChild(createListItem('tab' + (i + 1), args[i][0], i === 0 ? true : false));
         }
         tab_content.id = "tabContent";
@@ -607,8 +609,11 @@
         '  cursor:pointer; border-bottom:none; margin-right:4px;' + 
         '  font-family:verdana; font-size:.8em; font-weight:bold; color:#AAA; ' + 
         '}' + 
-        '#tabs .selected{ ' +
-        '  background-color:#444; color:#cea500; font-weight: bold;' +
+        '#tabs li:hover { ' + 
+        '  background-color:#333;' + 
+        '}' + 
+        '#tabs li.selected { ' +
+        '  background-color:#444 !important; color:#cea500; font-weight: bold;' +
         '}' + 
         '#tabs #tabContent div { ' +
         '  padding:10px; color:#EEE; background-color:#444; overflow:hidden;' +
