@@ -11,7 +11,7 @@ module.exports = function (grunt) {
         '../bookmarklet.source.js',
         'closure/task.js',
         'bookmarklet/task.js',
-        'grunt.js' // self]
+        'grunt.js' // self
       ]
     },
     jshint: {
@@ -38,8 +38,7 @@ module.exports = function (grunt) {
         sources: ['../bookmarklet.source.js'],
         output: '../bookmarklet.compiled.js',
         level: {
-          compilation: 'ADVANCED_OPTIMIZATIONS',
-          // SIMPLE_OPTIMIZATIONS, WHITESPACE_ONLY
+          compilation: 'ADVANCED_OPTIMIZATIONS', // SIMPLE_OPTIMIZATIONS, WHITESPACE_ONLY
           warnings: 'VERBOSE' // QUIET, DEFAULT
         },
         sourcemap: {
@@ -50,8 +49,7 @@ module.exports = function (grunt) {
     },
     bookmarklet: {
       wrap: false,
-      copytoclipboard: true,
-      // OS X only 
+      copytoclipboard: true, // OS X only 
       source: '../bookmarklet.compiled.js',
       output: '../bookmarklet.js'
     }
