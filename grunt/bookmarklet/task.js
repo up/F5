@@ -88,13 +88,14 @@ module.exports = function (grunt) {
         i = 0,
         len = str.length,
         mode = {
-        singleQuote: false,
-        doubleQuote: false,
-        regex: false,
-        blockComment: false,
-        lineComment: false,
-        condComp: false
-      };
+          singleQuote: false,
+          doubleQuote: false,
+          regex: false,
+          blockComment: false,
+          lineComment: false,
+          condComp: false
+        }
+      ;
 
       str = ('__' + str + '__').split('');
 

@@ -50,7 +50,7 @@ module.exports = function (grunt) {
     bookmarklet: {
       wrap: false,
       copytoclipboard: true, // OS X only 
-      source: '../bookmarklet.compiled.js',
+      source: '../bookmarklet.source.js',
       output: '../bookmarklet.js'
     }
   });
@@ -58,6 +58,6 @@ module.exports = function (grunt) {
   grunt.loadTasks('closure');
   grunt.loadTasks('bookmarklet');
 
-  grunt.registerTask('default', 'lint closure bookmarklet');
+  grunt.registerTask('default', 'lint bookmarklet');
 
 };
