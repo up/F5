@@ -13,4 +13,7 @@ Thumbs.db
 .htaccess
 
 # Build Tools
-closure/compiler.jar
+compiler.jar
+
+*.compiled.js
+*.sourcemap.js
