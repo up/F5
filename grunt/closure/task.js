@@ -25,11 +25,12 @@ module.exports = function (grunt) {
   grunt.registerHelper('compiler', function (options, wait, callback) {
 
     var
-    compilation = options.level.compilation,
+      compilation = options.level.compilation,
       warnings = options.level.warnings,
       sources = options.sources,
       files = '', 
-      sourcemap;
+      sourcemap
+    ;
 
     for (var i = 0; i < sources.length; i++) {
       files += '--js ' + sources[i];
