@@ -1,4 +1,4 @@
-# Closure Compiler
+# Closure Compiler 
 
 The Closure Compiler application is a Java command-line utility that compresses, optimizes, and looks for mistakes in your JavaScript. 
 
