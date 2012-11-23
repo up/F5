@@ -85,7 +85,7 @@ module.exports = function (grunt) {
     removeComments = function (str) {
 
       var
-      i = 0,
+        i = 0,
         len = str.length,
         mode = {
         singleQuote: false,
