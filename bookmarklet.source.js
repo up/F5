@@ -278,6 +278,7 @@
           addElement('br', SBTitle);
         }
 
+        /*
         select = document.createElement('select');
         select.id = "interval";
         select.style.cssText = "";
@@ -292,6 +293,7 @@
         }
 
         SBTitle.appendChild(select);
+        */
 
         SBTitle.innerHTML += '<button onclick="F5.toggleAll()">Toggle</button>';
         addElement('br', SBTitle);
@@ -657,10 +659,12 @@
       SBMethod.onchange = function () {
         method = this.options[this.selectedIndex].value;
       };
+      /*
       var SBInterval = document.querySelector('#interval');
       SBInterval.onchange = function () {
         interval = this.options[this.selectedIndex].value; // TODO: bug?
       };
+      */
 
     }, 100);
 
